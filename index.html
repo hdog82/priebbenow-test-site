@@ -49,7 +49,7 @@
   /* HERO BODY — buttons left, carousel right */
   .hero-body {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 3rem;
     width: 100%;
@@ -58,7 +58,7 @@
   }
 
   /* NAV BUTTONS */
-  .nav-buttons { display: flex; flex-direction: column; gap: 0.75rem; width: 220px; flex-shrink: 0; justify-content: center; }
+  .nav-buttons { display: flex; flex-direction: column; gap: 0.75rem; width: 220px; flex-shrink: 0; }
   .nav-btn {
     display: block; padding: 1rem 1.75rem; border-radius: 6px;
     text-decoration: none; border: none; background: var(--teal-mid); color: white;
@@ -69,7 +69,7 @@
   .nav-btn:hover { background: #000000; color: #ffffff; }
 
   /* CAROUSEL */
-  .carousel-wrap { width: 280px; flex-shrink: 0; }
+  .carousel-wrap { width: 200px; flex-shrink: 0; }
   .carousel-label {
     font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--gray-400); margin-bottom: 0.75rem;
@@ -77,8 +77,8 @@
   .carousel-overflow { overflow: hidden; border-radius: 6px; }
   .carousel-track { display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
   .carousel-track img {
-    min-width: 100%; width: 100%; height: 280px; object-fit: cover;
-    display: block; flex-shrink: 0; border-radius: 6px;
+    min-width: 100%; width: 100%; height: 280px; object-fit: contain;
+    display: block; flex-shrink: 0; border-radius: 6px; background: var(--gray-100);
   }
   .carousel-caption-box { margin-top: 0.6rem; }
   .carousel-caption-journal { font-size: 0.8rem; font-weight: 500; color: var(--navy); font-style: italic; }
@@ -163,8 +163,8 @@
       buildCarousel([
         { image: 'anie202305585-toc-0001-m.jpg', journal: 'Angewandte Chemie', year: '2023', volume: '', pages: '' },
         { image: 'jmcmar_2025_68_issue-8_xlargecover.jpg', journal: 'Journal of Medicinal Chemistry', year: '2025', volume: 'Vol. 68, No. 8', pages: '' },
-        { image: 'accacs.2026.16.issue-5.xlargecover.jpg', journal: 'ACS Catalysis', year: '2026', volume: 'Vol. 16, No. 5', pages: '' },
-        { image: 'jacsat.2025.147.issue-28.xlargecover.jpg', journal: 'JACS', year: '2025', volume: 'Vol. 147, No. 28', pages: '' }
+        { image: 'accacs_2026_16_issue-5_xlargecover.jpg', journal: 'ACS Catalysis', year: '2026', volume: 'Vol. 16, No. 5', pages: '' },
+        { image: 'jacsat_2025_147_issue-28_xlargecover.jpg', journal: 'JACS', year: '2025', volume: 'Vol. 147, No. 28', pages: '' }
       ]);
     });
 </script>
