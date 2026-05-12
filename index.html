@@ -8,25 +8,19 @@
 <style>
   :root {
     --navy: #1e2d4a; --teal-dark: #1a6b5a; --teal-mid: #2a9478;
-    --teal-light: #4abf9f; --teal-pale: #e0f5ef; --magenta: #c0296b;
+    --teal-light: #4abf9f; --magenta: #c0296b;
     --gray-100: #f7f8f9; --gray-200: #eaecef; --gray-400: #9ca3af;
-    --gray-600: #5a6270; --gray-800: #2d3340; --white: #ffffff;
-    --font: 'Aptos', 'Segoe UI', system-ui, sans-serif;
+    --white: #ffffff; --font: 'Aptos', 'Segoe UI', system-ui, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font); background: var(--white); color: var(--gray-800); min-height: 100vh; display: flex; flex-direction: column; }
+  body { font-family: var(--font); background: var(--white); color: var(--gray-100); min-height: 100vh; display: flex; flex-direction: column; }
 
-  /* HERO */
   .hero {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     padding: 4rem 2rem 3rem;
     background: linear-gradient(160deg, #eef2f7 0%, #f8f7ff 50%, #fdf0f5 100%);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .hero::before {
     content: ''; position: absolute; top: -120px; right: -120px;
@@ -41,30 +35,20 @@
     pointer-events: none;
   }
 
-  /* LOGO */
   .logo-wrap { margin-bottom: 3rem; animation: fadeDown 0.7s ease both; text-align: center; }
   .logo { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 500; color: var(--navy); letter-spacing: 0.03em; text-transform: uppercase; line-height: 1; }
   .logo span { color: var(--teal-mid); }
 
-  /* HERO BODY */
   .hero-body {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 3rem;
-    width: 100%;
-    max-width: 860px;
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: 3rem; width: 100%; max-width: 860px;
     animation: fadeUp 0.7s 0.2s ease both;
   }
 
-  /* NAV BUTTONS — vertically centred with the image box only */
+  /* NAV — fixed height matching carousel */
   .nav-buttons-wrap {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 220px;
-    flex-shrink: 0;
-    height: 280px; /* same as image box */
+    width: 220px; height: 280px; flex-shrink: 0;
+    display: flex; flex-direction: column; justify-content: center;
   }
   .nav-buttons { display: flex; flex-direction: column; gap: 0.75rem; }
   .nav-btn {
@@ -74,45 +58,44 @@
     letter-spacing: 0.03em; text-align: center;
     transition: background 0.4s ease, color 0.4s ease; cursor: pointer;
   }
-  .nav-btn:hover { background: #000000; color: #ffffff; }
+  .nav-btn:hover { background: #000; color: #fff; }
 
-  /* CAROUSEL — fully locked dimensions, nothing can cause reflow */
+  /* CAROUSEL — background-image approach, zero reflow */
   .carousel-wrap { width: 200px; flex-shrink: 0; }
+
+  /* This div never changes size — ever */
   .carousel-box {
-    width: 200px;
-    height: 280px;
+    width: 200px !important;
+    height: 280px !important;
+    min-width: 200px !important;
+    max-width: 200px !important;
+    min-height: 280px !important;
+    max-height: 280px !important;
     position: relative;
     border-radius: 6px;
-    background: var(--gray-100);
+    background-color: var(--gray-100);
     overflow: hidden;
-    /* Lock the box so it never resizes */
-    flex-shrink: 0;
-    flex-grow: 0;
   }
+
+  /* Each slide is a background-image div — no img tags, no reflow */
   .carousel-slide {
     position: absolute;
     top: 0; left: 0;
-    width: 200px;
-    height: 280px;
+    width: 200px !important;
+    height: 280px !important;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--gray-100);
     opacity: 0;
     transition: opacity 0.6s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
   }
   .carousel-slide.active { opacity: 1; }
-  .carousel-slide img {
-    width: 200px;
-    height: 280px;
-    object-fit: contain;
-    display: block;
-  }
+
   .carousel-caption-box { margin-top: 0.6rem; min-height: 2.5rem; }
   .carousel-caption-journal { font-size: 0.78rem; font-weight: 500; color: var(--navy); font-style: italic; line-height: 1.3; }
   .carousel-caption-detail { font-size: 0.7rem; color: var(--gray-400); font-weight: 300; margin-top: 2px; }
 
-  /* FOOTER */
   footer { text-align: center; padding: 1.5rem 2rem; border-top: 1px solid var(--gray-200); background: var(--white); }
   footer p { font-size: 0.72rem; color: var(--gray-400); font-weight: 300; }
   footer a { color: var(--teal-mid); text-decoration: none; }
@@ -124,10 +107,9 @@
     .hero { padding: 2.5rem 1.25rem 2rem; }
     .hero-body { flex-direction: column; align-items: center; gap: 1.5rem; }
     .nav-buttons-wrap { width: 100%; max-width: 320px; height: auto; }
-    .carousel-wrap { width: 100%; max-width: 260px; }
-    .carousel-box { width: 100%; max-width: 260px; height: 260px; }
-    .carousel-slide { width: 100%; max-width: 260px; height: 260px; }
-    .carousel-slide img { width: 100%; height: 260px; }
+    .carousel-wrap { width: 220px; }
+    .carousel-box { width: 220px !important; max-width: 220px !important; min-width: 220px !important; }
+    .carousel-slide { width: 220px !important; }
     footer { padding: 1.25rem; }
   }
 </style>
@@ -181,10 +163,9 @@
     items = data;
     total = data.length;
     const box = document.getElementById('home-carousel-box');
+    // Use background-image divs — no <img> tags means zero layout reflow
     box.innerHTML = data.map((item, i) =>
-      `<div class="carousel-slide${i===0?' active':''}">` +
-      `<img src="${item.image}" alt="${item.journal || ''}" loading="eager">` +
-      `</div>`
+      `<div class="carousel-slide${i===0?' active':''}" style="background-image:url('${item.image}')"></div>`
     ).join('');
     goTo(0);
     setInterval(() => goTo((current + 1) % total), 3500);
