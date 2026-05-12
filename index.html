@@ -40,14 +40,14 @@
   .logo span { color: var(--teal-mid); }
 
   .hero-body {
-    display: flex; align-items: flex-start; justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     gap: 3rem; width: 100%; max-width: 860px;
     animation: fadeUp 0.7s 0.2s ease both;
   }
 
   /* NAV — fixed height matching carousel */
   .nav-buttons-wrap {
-    width: 220px; height: 340px; flex-shrink: 0;
+    width: 220px; height: 280px; flex-shrink: 0;
     display: flex; flex-direction: column; justify-content: center;
   }
   .nav-buttons { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -107,7 +107,7 @@
     .hero { padding: 2.5rem 1.25rem 2rem; }
     .hero-body { flex-direction: column; align-items: center; gap: 1.5rem; }
     .nav-buttons-wrap { width: 100%; max-width: 320px; height: auto; }
-    .carousel-wrap { width: 220px; }
+    .carousel-wrap { width: 200px; flex-shrink: 0; }
     .carousel-box { width: 220px !important; max-width: 220px !important; min-width: 220px !important; }
     .carousel-slide { width: 220px !important; }
     footer { padding: 1.25rem; }
