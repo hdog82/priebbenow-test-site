@@ -46,7 +46,7 @@
   .logo { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 500; color: var(--navy); letter-spacing: 0.03em; text-transform: uppercase; line-height: 1; }
   .logo span { color: var(--teal-mid); }
 
-  /* HERO BODY — buttons left, carousel right */
+  /* HERO BODY */
   .hero-body {
     display: flex;
     align-items: center;
@@ -70,10 +70,6 @@
 
   /* CAROUSEL */
   .carousel-wrap { width: 200px; flex-shrink: 0; }
-  .carousel-label {
-    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--gray-400); margin-bottom: 0.75rem;
-  }
   .carousel-overflow { overflow: hidden; border-radius: 6px; height: 280px; }
   .carousel-track { display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
   .carousel-track img {
@@ -93,9 +89,13 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
   @media (max-width: 650px) {
-    .hero-body { flex-direction: column; align-items: center; }
-    .nav-buttons { width: 100%; max-width: 340px; }
-    .carousel-wrap { width: 100%; max-width: 340px; }
+    .hero { padding: 2.5rem 1.25rem 2rem; }
+    .hero-body { flex-direction: column; align-items: center; gap: 1.5rem; }
+    .nav-buttons { width: 100%; max-width: 320px; }
+    .carousel-wrap { width: 100%; max-width: 320px; }
+    .carousel-overflow { height: 240px; }
+    .carousel-track img { height: 240px; }
+    footer { padding: 1.25rem; }
   }
 </style>
 </head>
@@ -115,7 +115,6 @@
     </nav>
 
     <div class="carousel-wrap">
-      <div class="carousel-label">Recent Cover Articles</div>
       <div class="carousel-overflow">
         <div class="carousel-track" id="home-carousel-track"></div>
       </div>
@@ -141,7 +140,7 @@
     document.getElementById('home-carousel-track').style.transform = `translateX(-${n * 100}%)`;
     const item = items[n];
     document.getElementById('carousel-journal').textContent = [item.journal, item.year].filter(Boolean).join(' · ');
-    const detail = [item.volume, item.pages].filter(Boolean).join(', pp. ');
+    const detail = [item.volume, item.pages ? 'pp. ' + item.pages : ''].filter(Boolean).join(', ');
     document.getElementById('carousel-detail').textContent = detail;
   }
 
@@ -150,7 +149,7 @@
     total = data.length;
     const track = document.getElementById('home-carousel-track');
     track.innerHTML = data.map(item =>
-      `<img src="${item.image}" alt="${item.journal || ''}" style="min-width:100%;width:100%;height:auto;display:block;flex-shrink:0;border-radius:6px;">`
+      `<img src="${item.image}" alt="${item.journal || ''}">`
     ).join('');
     goTo(0);
     setInterval(() => goTo((current + 1) % total), 3500);
@@ -162,9 +161,9 @@
     .catch(() => {
       buildCarousel([
         { image: 'anie202305585-toc-0001-m.jpg', journal: 'Angewandte Chemie', year: '2023', volume: '', pages: '' },
-        { image: 'jmcmar_2025_68_issue-8_xlargecover.jpg', journal: 'Journal of Medicinal Chemistry', year: '2025', volume: 'Vol. 68, No. 8', pages: '' },
-        { image: 'accacs_2026_16_issue-5_xlargecover.jpg', journal: 'ACS Catalysis', year: '2026', volume: 'Vol. 16, No. 5', pages: '' },
-        { image: 'jacsat_2025_147_issue-28_xlargecover.jpg', journal: 'JACS', year: '2025', volume: 'Vol. 147, No. 28', pages: '' }
+        { image: 'jmcmar.2025.68.issue-8.xlargecover.jpg', journal: 'Journal of Medicinal Chemistry', year: '2025', volume: 'Vol. 68, No. 8', pages: '' },
+        { image: 'accacs.2026.16.issue-5.xlargecover.jpg', journal: 'ACS Catalysis', year: '2026', volume: 'Vol. 16, No. 5', pages: '' },
+        { image: 'jacsat.2025.147.issue-28.xlargecover.jpg', journal: 'JACS', year: '2025', volume: 'Vol. 147, No. 28', pages: '' }
       ]);
     });
 </script>
