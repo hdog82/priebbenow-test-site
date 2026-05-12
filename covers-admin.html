@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Covers Admin — Priebbenow Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Aptos:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1e2d4a; --teal-dark: #1a6b5a; --teal-mid: #2a9478;
+    --teal-light: #4abf9f; --magenta: #c0296b;
+    --gray-100: #f7f8f9; --gray-200: #eaecef; --gray-400: #9ca3af;
+    --gray-600: #5a6270; --gray-800: #2d3340; --white: #ffffff;
+    --font: 'Aptos', 'Segoe UI', system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--gray-100); color: var(--gray-800); min-height: 100vh; }
+  header { background: var(--navy); color: white; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 1.1rem; font-weight: 400; }
+  header h1 em { font-style: italic; color: var(--teal-light); }
+  .header-note { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+  .admin-wrap { max-width: 860px; margin: 2rem auto; padding: 0 1.5rem 4rem; }
+  .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 1.75rem; margin-bottom: 1.5rem; }
+  .card-title { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--gray-200); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.75rem; font-weight: 500; color: var(--gray-600); letter-spacing: 0.02em; }
+  input, select, textarea { font-family: var(--font); font-size: 0.85rem; color: var(--gray-800); border: 1px solid var(--gray-200); border-radius: 4px; padding: 0.5rem 0.75rem; background: var(--white); transition: border-color 0.15s; outline: none; width: 100%; }
+  input:focus, select:focus { border-color: var(--teal-mid); }
+
+  /* IMAGE UPLOAD */
+  .img-upload-area { border: 2px dashed var(--gray-200); border-radius: 6px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .img-upload-area:hover { border-color: var(--teal-mid); background: var(--gray-100); }
+  .img-upload-area.has-image { border-style: solid; border-color: var(--teal-mid); padding: 0.5rem; cursor: default; }
+  .img-preview { width: 120px; height: 160px; object-fit: contain; border-radius: 4px; display: none; background: var(--gray-100); }
+  .img-upload-area.has-image .img-preview { display: block; }
+  .img-upload-area.has-image .upload-placeholder { display: none; }
+  .upload-placeholder { color: var(--gray-400); font-size: 0.8rem; }
+  .upload-placeholder span { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
+  input[type="file"] { display: none; }
+  .img-change-btn { font-family: var(--font); font-size: 0.72rem; color: var(--teal-mid); background: none; border: none; cursor: pointer; padding: 4px 0; text-decoration: underline; display: none; }
+  .img-upload-area.has-image .img-change-btn { display: block; }
+
+  /* BUTTONS */
+  .btn { font-family: var(--font); font-size: 0.82rem; font-weight: 500; padding: 0.55rem 1.25rem; border-radius: 4px; border: none; cursor: pointer; transition: all 0.15s; }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-danger { background: transparent; color: var(--magenta); border: 1px solid var(--magenta); font-size: 0.75rem; padding: 3px 10px; }
+  .btn-danger:hover { background: var(--magenta); color: white; }
+  .btn-edit { background: transparent; color: var(--navy); border: 1px solid var(--navy); font-size: 0.75rem; padding: 3px 10px; }
+  .btn-edit:hover { background: var(--navy); color: white; }
+  .btn-export { background: var(--teal-mid); color: white; }
+  .btn-export:hover { background: var(--teal-dark); }
+  .btn-import { background: transparent; border: 1px solid var(--navy); color: var(--navy); }
+  .btn-import:hover { background: var(--navy); color: white; }
+  .btn-secondary { background: transparent; border: 1px solid var(--gray-400); color: var(--gray-600); }
+  .btn-secondary:hover { background: var(--gray-200); }
+  .form-actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; align-items: center; flex-wrap: wrap; }
+
+  /* EDIT BANNER */
+  .edit-banner { background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.82rem; color: #7a5600; display: none; }
+  .edit-banner.show { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+
+  /* COVER LIST */
+  .cover-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 6px; margin-bottom: 0.5rem; }
+  .cover-row:hover { border-color: var(--gray-400); }
+  .cover-thumb { width: 48px; height: 64px; object-fit: contain; border-radius: 4px; background: var(--gray-200); flex-shrink: 0; }
+  .cover-info { flex: 1; }
+  .cover-title { font-size: 0.85rem; font-weight: 500; color: var(--navy); line-height: 1.3; }
+  .cover-meta { font-size: 0.75rem; color: var(--gray-400); margin-top: 2px; }
+  .cover-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+  .empty-state { text-align: center; padding: 2rem; color: var(--gray-400); font-size: 0.85rem; font-style: italic; }
+
+  /* EXPORT */
+  .export-area { background: var(--gray-100); border-radius: 4px; padding: 1rem; font-family: monospace; font-size: 0.75rem; color: var(--gray-600); max-height: 180px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; margin-top: 1rem; }
+  .export-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+  .success-msg { font-size: 0.78rem; color: var(--teal-dark); display: none; }
+  .success-msg.show { display: inline; }
+  .error-msg { font-size: 0.78rem; color: var(--magenta); display: none; }
+  .error-msg.show { display: inline; }
+
+  .hint { font-size: 0.72rem; color: var(--gray-400); margin-top: 0.3rem; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Covers &amp; Highlights <em>Admin Panel</em></h1>
+  <span class="header-note">Changes are exported as JSON — upload to GitHub to go live</span>
+</header>
+
+<div class="admin-wrap">
+
+  <!-- ADD / EDIT FORM -->
+  <div class="card">
+    <div class="card-title" id="form-title">Add Cover / Highlight Image</div>
+    <div class="edit-banner" id="edit-banner">
+      <span>✏️ Editing entry <strong id="edit-label"></strong></span>
+      <button class="btn btn-secondary" onclick="cancelEdit()">Cancel edit</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Cover Image</label>
+        <div class="img-upload-area" id="upload-area" onclick="handleUploadClick()">
+          <img class="img-preview" id="img-preview" src="" alt="preview">
+          <div class="upload-placeholder"><span>🖼️</span>Click to upload image</div>
+          <button class="img-change-btn" onclick="event.stopPropagation(); triggerFileInput()">Change image</button>
+        </div>
+        <input type="file" id="img-input" accept="image/*" onchange="onImageSelected(event)">
+        <p class="hint">Image will be uploaded to GitHub separately. Filename must match exactly.</p>
+      </div>
+      <div class="form-group">
+        <label>Image filename *</label>
+        <input type="text" id="inp-filename" placeholder="e.g. jacs_2025_cover.jpg">
+        <p class="hint">Must match the filename uploaded to your GitHub repo.</p>
+      </div>
+      <div class="form-group full">
+        <label>Publication Title (optional)</label>
+        <input type="text" id="inp-title" placeholder="e.g. Rhodium(III)-Catalyzed C–H Alkynylation...">
+      </div>
+      <div class="form-group">
+        <label>Journal</label>
+        <input type="text" id="inp-journal" placeholder="e.g. ACS Catalysis">
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <input type="text" id="inp-year" placeholder="e.g. 2025">
+      </div>
+      <div class="form-group full">
+        <label>Authors (optional)</label>
+        <input type="text" id="inp-authors" placeholder="e.g. Tong, Y. & Priebbenow, D. L.">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="submit-btn" onclick="submitForm()">Add to Carousel</button>
+      <button class="btn btn-secondary" onclick="cancelEdit()">Clear</button>
+      <span class="success-msg" id="add-success">✓ Saved</span>
+    </div>
+  </div>
+
+  <!-- CURRENT COVERS -->
+  <div class="card">
+    <div class="card-title">Current Carousel Images</div>
+    <div id="covers-list"><div class="empty-state">No covers yet — import from file or add one above.</div></div>
+  </div>
+
+  <!-- EXPORT / IMPORT -->
+  <div class="card">
+    <div class="card-title">Export & Import</div>
+    <p style="font-size:0.82rem;color:var(--gray-600);margin-bottom:1.25rem;font-weight:300;line-height:1.7">
+      <strong>Step 1:</strong> Import your current <code>covers.json</code> from file.<br>
+      <strong>Step 2:</strong> Add or edit entries above.<br>
+      <strong>Step 3:</strong> Download and upload <code>covers.json</code> to GitHub. Also upload any new image files.<br>
+      <span style="color:var(--magenta);font-weight:500">⚠ Important:</span> Image filenames must match exactly what you upload to GitHub.
+    </p>
+    <div class="export-actions">
+      <button class="btn btn-import" onclick="document.getElementById('import-input').click()">⬆ Import from file</button>
+      <button class="btn btn-export" onclick="downloadJSON()">⬇ Download covers.json</button>
+      <input type="file" id="import-input" accept=".json" style="display:none" onchange="importFromFile(event)">
+    </div>
+    <div style="margin-top:0.75rem;display:flex;gap:1rem">
+      <span class="success-msg" id="import-success">✓ Imported</span>
+      <span class="error-msg" id="import-error">✗ Could not read file</span>
+    </div>
+    <div style="font-size:0.72rem;color:var(--gray-400);margin-top:1.25rem;margin-bottom:0.4rem;letter-spacing:0.04em;text-transform:uppercase">JSON Preview</div>
+    <div class="export-area" id="json-preview">Import or make changes to see output here.</div>
+  </div>
+
+</div>
+
+<script>
+  let covers = [];
+  let editingIndex = -1;
+  let currentImageBase64 = '';
+
+  // ---- IMAGE UPLOAD ----
+  function handleUploadClick() {
+    if (!document.getElementById('upload-area').classList.contains('has-image')) triggerFileInput();
+  }
+  function triggerFileInput() {
+    document.getElementById('img-input').value = '';
+    document.getElementById('img-input').click();
+  }
+  function onImageSelected(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    // Auto-fill filename
+    if (!document.getElementById('inp-filename').value) {
+      document.getElementById('inp-filename').value = file.name;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      currentImageBase64 = e.target.result;
+      document.getElementById('img-preview').src = e.target.result;
+      document.getElementById('upload-area').classList.add('has-image');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ---- FORM ----
+  function submitForm() {
+    const filename = document.getElementById('inp-filename').value.trim();
+    if (!filename) { alert('Please enter an image filename.'); return; }
+    const entry = {
+      image: filename,
+      title: document.getElementById('inp-title').value.trim(),
+      journal: document.getElementById('inp-journal').value.trim(),
+      year: document.getElementById('inp-year').value.trim(),
+      authors: document.getElementById('inp-authors').value.trim()
+    };
+    if (editingIndex >= 0) {
+      covers[editingIndex] = entry;
+    } else {
+      covers.push(entry);
+    }
+    renderList();
+    updatePreview();
+    cancelEdit();
+    showMsg('add-success');
+  }
+
+  function editCover(index) {
+    const c = covers[index];
+    editingIndex = index;
+    document.getElementById('inp-filename').value = c.image || '';
+    document.getElementById('inp-title').value = c.title || '';
+    document.getElementById('inp-journal').value = c.journal || '';
+    document.getElementById('inp-year').value = c.year || '';
+    document.getElementById('inp-authors').value = c.authors || '';
+    document.getElementById('img-preview').src = c.image || '';
+    document.getElementById('upload-area').classList.toggle('has-image', !!c.image);
+    currentImageBase64 = '';
+    document.getElementById('form-title').textContent = 'Edit Cover / Highlight Image';
+    document.getElementById('submit-btn').textContent = 'Save Changes';
+    document.getElementById('edit-label').textContent = c.journal || c.image;
+    document.getElementById('edit-banner').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function removeCover(index) {
+    if (!confirm('Remove this cover?')) return;
+    if (editingIndex === index) cancelEdit();
+    covers.splice(index, 1);
+    renderList();
+    updatePreview();
+  }
+
+  function moveCover(index, dir) {
+    const newIndex = index + dir;
+    if (newIndex < 0 || newIndex >= covers.length) return;
+    [covers[index], covers[newIndex]] = [covers[newIndex], covers[index]];
+    renderList();
+    updatePreview();
+  }
+
+  function cancelEdit() {
+    editingIndex = -1;
+    currentImageBase64 = '';
+    ['inp-filename','inp-title','inp-journal','inp-year','inp-authors'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('img-preview').src = '';
+    document.getElementById('upload-area').classList.remove('has-image');
+    document.getElementById('img-input').value = '';
+    document.getElementById('form-title').textContent = 'Add Cover / Highlight Image';
+    document.getElementById('submit-btn').textContent = 'Add to Carousel';
+    document.getElementById('edit-banner').classList.remove('show');
+  }
+
+  function renderList() {
+    const container = document.getElementById('covers-list');
+    if (!covers.length) { container.innerHTML = '<div class="empty-state">No covers yet.</div>'; return; }
+    container.innerHTML = covers.map((c, i) => `
+      <div class="cover-row">
+        <img class="cover-thumb" src="${c.image}" alt="" onerror="this.style.background='var(--gray-200)'">
+        <div class="cover-info">
+          <div class="cover-title">${c.title || '<em style="color:var(--gray-400);font-weight:300">No title</em>'}</div>
+          <div class="cover-meta">${[c.journal, c.year, c.authors].filter(Boolean).join(' · ')}</div>
+        </div>
+        <div class="cover-actions">
+          ${i > 0 ? `<button class="btn btn-edit" onclick="moveCover(${i},-1)">↑</button>` : ''}
+          ${i < covers.length-1 ? `<button class="btn btn-edit" onclick="moveCover(${i},1)">↓</button>` : ''}
+          <button class="btn btn-edit" onclick="editCover(${i})">Edit</button>
+          <button class="btn btn-danger" onclick="removeCover(${i})">Remove</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // ---- JSON ----
+  function updatePreview() {
+    document.getElementById('json-preview').textContent = JSON.stringify(covers, null, 2);
+  }
+
+  function downloadJSON() {
+    updatePreview();
+    const blob = new Blob([JSON.stringify(covers, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'covers.json';
+    a.click();
+  }
+
+  function importFromFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        covers = JSON.parse(e.target.result);
+        renderList();
+        updatePreview();
+        showMsg('import-success');
+      } catch (err) { showMsg('import-error'); }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function showMsg(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
