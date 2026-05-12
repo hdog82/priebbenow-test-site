@@ -70,11 +70,16 @@
 
   /* CAROUSEL */
   .carousel-wrap { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; }
-  .carousel-overflow { overflow: hidden; border-radius: 6px; height: 280px; flex-shrink: 0; }
-  .carousel-track { display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); height: 280px; align-items: stretch; }
-  .carousel-track img {
-    min-width: 100%; width: 100%; height: 280px; object-fit: contain;
-    display: block; flex-shrink: 0; border-radius: 6px; background: var(--gray-100);
+  .carousel-overflow { border-radius: 6px; height: 280px; flex-shrink: 0; position: relative; overflow: hidden; background: var(--gray-100); }
+  .carousel-slide {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0; transition: opacity 0.6s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .carousel-slide.active { opacity: 1; }
+  .carousel-slide img {
+    max-width: 100%; max-height: 100%; width: auto; height: auto;
+    display: block; border-radius: 6px;
   }
   .carousel-caption-box { margin-top: 0.6rem; min-height: 2.4rem; }
   .carousel-caption-journal { font-size: 0.8rem; font-weight: 500; color: var(--navy); font-style: italic; }
@@ -91,10 +96,9 @@
   @media (max-width: 650px) {
     .hero { padding: 2.5rem 1.25rem 2rem; }
     .hero-body { flex-direction: column; align-items: center; gap: 1.5rem; }
-    .nav-buttons { width: 100%; max-width: 320px; }
+    .nav-buttons { width: 100%; max-width: 320px; margin-bottom: 0; }
     .carousel-wrap { width: 100%; max-width: 320px; }
     .carousel-overflow { height: 240px; }
-    .carousel-track img { height: 240px; }
     footer { padding: 1.25rem; }
   }
 </style>
@@ -136,8 +140,8 @@
   let items = [];
 
   function goTo(n) {
+    document.querySelectorAll('.carousel-slide').forEach((s, i) => s.classList.toggle('active', i === n));
     current = n;
-    document.getElementById('home-carousel-track').style.transform = `translateX(-${n * 100}%)`;
     const item = items[n];
     document.getElementById('carousel-journal').textContent = [item.journal, item.year].filter(Boolean).join(' · ');
     const detail = [item.volume, item.pages ? 'pp. ' + item.pages : ''].filter(Boolean).join(', ');
@@ -148,8 +152,8 @@
     items = data;
     total = data.length;
     const track = document.getElementById('home-carousel-track');
-    track.innerHTML = data.map(item =>
-      `<img src="${item.image}" alt="${item.journal || ''}">`
+    track.innerHTML = data.map((item, i) =>
+      `<div class="carousel-slide${i===0?' active':''}"><img src="${item.image}" alt="${item.journal || ''}"></div>`
     ).join('');
     goTo(0);
     setInterval(() => goTo((current + 1) % total), 3500);
